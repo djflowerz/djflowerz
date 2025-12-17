@@ -57,7 +57,7 @@ export async function POST(req: Request) {
                 PartyA: formattedPhone,
                 PartyB: shortcode,
                 PhoneNumber: formattedPhone,
-                CallBackURL: `https://dj-flowerz-platform.vercel.app/api/mpesa/callback`, // Replace with actual domain in prod
+                CallBackURL: process.env.MPESA_CALLBACK_URL || `https://${process.env.VERCEL_URL || 'dj-flowerz-final-v3.vercel.app'}/api/mpesa/callback`,
                 AccountReference: 'DJFlowerz',
                 TransactionDesc: 'Purchase'
             })
