@@ -1,13 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-// Init server-side Supabase client
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+export const dynamic = 'force-dynamic' // Force dynamic to prevent SSG attempts
 
 export async function POST(req: Request) {
+    // Init server-side Supabase client lazily to avoid build-time env var issues
+    const supabaseURL = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseURL || !supabaseKey) {
+        console.error("Supabase Env Vars missing");
+        return NextResponse.json({ error: 'Server Config Error' }, { status: 500 })
+    }
+
+    const supabase = createClient(supabaseURL, supabaseKey)
     // Get Authorization Header
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
