@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DJ Flowerz Platform
 
-## Getting Started
+This is the official DJ Flowerz Platform, built with Next.js, Supabase, and M-Pesa Integration.
 
-First, run the development server:
+## Deployment Status
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project is configured for **Production Deployment** on [Vercel](https://vercel.com) and **GitHub**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Live URL**: https://dj-flowerz-final-v3.vercel.app (Pending Final Deploy)
+- **Database**: Supabase (Production)
+- **Payments**: M-Pesa (Sandbox/Live via Env Vars)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Mixtapes**: Stream and download exclusive mixes.
+- **Music Pool**: Subscription-based access to high-quality audio.
+- **Store**: Buy DJ gear and software packs using M-Pesa.
+- **Admin Dashboard**: Manage products, mixes, and orders.
+- **Real-time Updates**: Live content updates via Supabase Realtime.
 
-## Learn More
+## Configuration
 
-To learn more about Next.js, take a look at the following resources:
+The application uses Environment Variables to connect to services securely. It does **NOT** rely on localhost for production.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Required Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key
+- `MPESA_CONSUMER_KEY`: M-Pesa API Key
+- `MPESA_CONSUMER_SECRET`: M-Pesa API Secret
+- `MPESA_PASSKEY`: M-Pesa Passkey
+- `MPESA_SHORTCODE`: Paybill/Till Number
+- `MPESA_CALLBACK_URL`: `https://[your-domain]/api/mpesa/callback`
 
-## Deploy on Vercel
+## Deployment Instructions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Push to GitHub**: Changes are automatically tracked.
+2. **Vercel**: Connect your GitHub repo to Vercel.
+3. **Environment**: Add the variables listed above in Vercel Project Settings.
+4. **Deploy**: Vercel will build and serve the site globally.
