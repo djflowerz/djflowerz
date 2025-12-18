@@ -6,7 +6,7 @@ import { LogOut, User, CreditCard, Download, Settings, Send, Loader2, Music, Pla
 import { supabase } from '@/lib/supabaseClient'
 
 export default function Dashboard() {
-    const { user, session, isLoading, signOut } = useAuth()
+    const { user, isLoading, signOut } = useAuth()
     const router = useRouter()
 
     // Data state
@@ -56,9 +56,12 @@ export default function Dashboard() {
     }
 
     const handleClaimReward = async () => {
-        if (!user || claiming || !session) return
+        if (!user || claiming) return
         setClaiming(true)
         try {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) throw new Error('No active session')
+
             const res = await fetch('/api/referrals/claim', {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${session.access_token}` }

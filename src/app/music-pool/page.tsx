@@ -218,7 +218,7 @@ export default function MusicPoolPage() {
 }
 
 function MusicPoolGrid({ genreId }: { genreId: string }) {
-    const { session, user } = useAuth()
+    const { user } = useAuth()
     const [mixes, setMixes] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -254,15 +254,18 @@ function MusicPoolGrid({ genreId }: { genreId: string }) {
     }
 
     const handleDownload = async (mixId: string, title: string) => {
-        if (!session && !user) {
-            window.location.href = '/api/auth/login?returnTo=/music-pool' // Point to Auth0 login
+        if (!user) {
+            window.location.href = '/login?redirect=/music-pool'
             return
         }
 
         try {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) throw new Error('No active session')
+
             const res = await fetch(`/api/download?fileId=${mixId}&type=mix`, {
                 headers: {
-                    Authorization: `Bearer ${session?.access_token}`
+                    Authorization: `Bearer ${session.access_token}`
                 }
             })
             const data = await res.json()
