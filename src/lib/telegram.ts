@@ -30,5 +30,20 @@ export const telegram = {
             console.error('Telegram Invite Error:', error);
             return null;
         }
+    },
+
+    async notifyPaymentSuccess(details: { orderId: string, amount: number, phone: string, receipt: string }) {
+        const message = `
+🎉 *New Payment Received!*
+
+💰 *Amount:* KES ${details.amount}
+🧾 *Receipt:* ${details.receipt}
+📱 *Phone:* ${details.phone}
+🆔 *Order ID:* ${details.orderId}
+
+_System Notification_
+        `.trim();
+
+        await this.sendMessage(TELEGRAM_CHANNEL_ID || '', message);
     }
 };

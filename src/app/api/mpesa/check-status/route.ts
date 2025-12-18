@@ -12,9 +12,9 @@ export async function GET(request: Request) {
     try {
         // Poll database to see if callback has updated the status
         const { data, error } = await supabase
-            .from('orders') // or separate payments table
+            .from('payments')
             .select('status, mpesa_receipt_number')
-            .eq('id', orderId)
+            .eq('checkout_request_id', orderId) // orderId in this context is the checkoutRequestId passed from frontend
             .single();
 
         if (error) throw error;
