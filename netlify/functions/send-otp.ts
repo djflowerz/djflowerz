@@ -4,10 +4,35 @@ import nodemailer from 'nodemailer';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
-// Initialize Supabase client with service role for admin access
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Parse Supabase credentials from environment
+function getSupabaseCredentials() {
+    // Try SUPABASE_CREDENTIALS first (JSON format)
+    const credsVar = process.env.SUPABASE_CREDENTIALS;
+    if (credsVar) {
+        try {
+            const creds = JSON.parse(credsVar);
+            return {
+                url: creds.url || creds.supabaseUrl,
+                serviceKey: creds.serviceRoleKey || creds.service_role_key || process.env.SUPABASE_SERVICE_ROLE_KEY
+            };
+        } catch (e) {
+            console.error('Error parsing SUPABASE_CREDENTIALS:', e);
+        }
+    }
+    // Fall back to individual env vars
+    return {
+        url: process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL,
+        serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY
+    };
+}
+
+const { url: supabaseUrl, serviceKey: supabaseServiceKey } = getSupabaseCredentials();
+
+if (!supabaseUrl || !supabaseServiceKey) {
+    console.error('Missing Supabase credentials. URL:', !!supabaseUrl, 'ServiceKey:', !!supabaseServiceKey);
+}
+
+const supabase = createClient(supabaseUrl || '', supabaseServiceKey || '');
 
 // Hash OTP for secure storage
 function hashOTP(otp: string): string {
