@@ -1,9 +1,15 @@
 'use client'
 import { useState } from 'react'
-import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Loader2, AlertCircle } from 'lucide-react'
+import GoTrue from 'gotrue-js'
+
+const auth = new GoTrue({
+    APIUrl: 'https://djflowerz.netlify.app/.netlify/identity',
+    audience: '',
+    setCookie: true,
+})
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
@@ -18,17 +24,17 @@ export default function LoginPage() {
         setError(null)
 
         try {
-            const { error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            })
+            const user = await auth.login(email, password, true)
 
-            if (error) throw error
-
-            router.push('/')
-            router.refresh()
+            if (user) {
+                // Store user session
+                localStorage.setItem('netlify_user', JSON.stringify(user))
+                router.push('/dashboard')
+                router.refresh()
+            }
         } catch (err: any) {
-            setError(err.message)
+            console.error('Login error:', err)
+            setError(err.message || 'Invalid email or password')
         } finally {
             setLoading(false)
         }

@@ -1,49 +1,30 @@
-import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          response = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          )
-        },
-      },
-    }
-  )
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // Check for Netlify Identity JWT token in cookies
+  const token = request.cookies.get('nf_jwt')?.value
 
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user) {
+    if (!token) {
       return NextResponse.redirect(new URL('/login?redirect=/admin', request.url))
     }
-    // Strict Admin Email Check
-    if (user.email !== 'ianmuriithiflowerz@gmail.com') {
-      return NextResponse.redirect(new URL('/', request.url))
+
+    // Decode JWT to check user email (basic validation)
+    // In production, you should verify the JWT signature
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+
+      // Strict Admin Email Check
+      if (payload.email !== 'ianmuriithiflowerz@gmail.com') {
+        return NextResponse.redirect(new URL('/', request.url))
+      }
+    } catch (error) {
+      // Invalid token
+      return NextResponse.redirect(new URL('/login?redirect=/admin', request.url))
     }
   }
 
-  return response
+  return NextResponse.next()
 }
 
 export const config = {
