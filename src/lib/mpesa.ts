@@ -1,18 +1,10 @@
 import axios from 'axios';
-
-
-// Helper to get env vars safely
-const getEnv = (key: string) => {
-    // In some builds process.env might be empty at top level, but okay at runtime.
-    // However, top level usage is dangerous in edge/client. All calls should be inside functions.
-    return process.env[key] || '';
-};
+import { getMpesaCredentials } from './env';
 
 // We will access these inside the functions to be safe
 
 export async function getMpesaToken() {
-    const consumerKey = process.env.MPESA_CONSUMER_KEY;
-    const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
+    const { consumerKey, consumerSecret } = getMpesaCredentials();
 
     if (!consumerKey || !consumerSecret) throw new Error("Missing MPESA credentials");
 
@@ -35,8 +27,7 @@ export async function getMpesaToken() {
 }
 
 export function generatePassword() {
-    const passkey = process.env.MPESA_PASSKEY;
-    const shortcode = process.env.MPESA_SHORTCODE || '174379';
+    const { passkey, shortcode } = getMpesaCredentials();
 
     if (!passkey) throw new Error("Missing MPESA Passkey");
 

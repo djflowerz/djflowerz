@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getMpesaCredentials } from '@/lib/env';
 
 export async function POST(req: Request) {
     try {
@@ -12,10 +13,7 @@ export async function POST(req: Request) {
         const formattedPhone = phone.replace(/^(?:\+254|0)/, '254');
 
         // M-Pesa Credentials
-        const consumerKey = process.env.MPESA_CONSUMER_KEY;
-        const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
-        const passkey = process.env.MPESA_PASSKEY;
-        const shortcode = process.env.MPESA_SHORTCODE;
+        const { consumerKey, consumerSecret, passkey, shortcode } = getMpesaCredentials();
 
         if (!consumerKey || !consumerSecret || !shortcode || !passkey) {
             console.error('Missing M-Pesa credentials');

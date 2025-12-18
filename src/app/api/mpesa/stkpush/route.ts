@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getMpesaToken, generatePassword } from '@/lib/mpesa';
+import { getEnv } from '@/lib/env';
 import axios from 'axios';
 
 export async function POST(req: Request) {
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
         const token = await getMpesaToken();
         const { password, timestamp, shortcode } = generatePassword();
 
-        const callbackUrl = process.env.MPESA_CALLBACK_URL || 'https://dj-flowerz-platform.vercel.app/api/mpesa/callback';
+        const callbackUrl = getEnv('MPESA_CALLBACK_URL') || 'https://dj-flowerz-platform.vercel.app/api/mpesa/callback';
 
         const response = await axios.post(
             'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
