@@ -83,15 +83,15 @@ export default function Navbar() {
                             onClick={() => setIsTipModalOpen(true)}
                             className="p-2 text-rose-500 hover:text-white transition-colors flex items-center gap-2 border border-rose-500/30 rounded-full hover:bg-rose-600 px-4"
                         >
-                            <span className="text-xs font-bold">Donate</span>
+                            <span className="text-xs font-bold">Tip DJ</span>
                         </button>
 
                         <button className="p-2 text-slate-400 hover:text-white transition-colors">
                             <ShoppingBag size={20} />
                         </button>
-                        <Link href="/login" className="px-5 py-2 text-sm font-bold text-white bg-rose-600 rounded-full hover:bg-rose-700 transition-transform active:scale-95 shadow-lg shadow-rose-600/20">
+                        <a href="/api/auth/login" className="px-5 py-2 text-sm font-bold text-white bg-rose-600 rounded-full hover:bg-rose-700 transition-transform active:scale-95 shadow-lg shadow-rose-600/20">
                             Join Pool
-                        </Link>
+                        </a>
                     </div>
 
                     {/* Mobile Toggle */}
@@ -117,11 +117,11 @@ export default function Navbar() {
                             onClick={() => { setIsTipModalOpen(true); setIsOpen(false); }}
                             className="text-lg font-medium text-rose-400 hover:text-white py-2 border-b border-white/5 text-left"
                         >
-                            Donate / Tip Jar ❤️
+                            Tip DJ Jar ❤️
                         </button>
-                        <Link href="/login" onClick={() => setIsOpen(false)} className="mt-4 w-full py-3 text-center font-bold text-white bg-rose-600 rounded-lg">
+                        <a href="/api/auth/login" onClick={() => setIsOpen(false)} className="mt-4 w-full py-3 text-center font-bold text-white bg-rose-600 rounded-lg">
                             Login / Join
-                        </Link>
+                        </a>
                     </div>
                 )}
             </nav>

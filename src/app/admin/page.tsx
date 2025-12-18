@@ -5,8 +5,9 @@ import { useAuth } from '@/context/AuthProvider'
 import { supabase } from '@/lib/supabaseClient'
 import { PlusCircle, Music, Upload, CheckCircle, ShieldAlert, DollarSign, Package, Calendar, User, Truck, Heart, Coffee, Send } from 'lucide-react'
 
-// Define the hardcoded admin email
-const ADMIN_EMAIL = 'ianmuriithiflowerz@gmail.com'
+
+
+import { isAdmin, ADMIN_EMAIL } from '@/lib/admin'
 
 export default function AdminPage() {
     const { user, isLoading: authLoading } = useAuth()
@@ -33,12 +34,12 @@ export default function AdminPage() {
         is_premium: true
     })
 
-    // Fetch genres and verify admin access
+    // Verify admin access
     useEffect(() => {
         if (authLoading) return
 
-        if (!user || user.email !== ADMIN_EMAIL) {
-            router.push('/dashboard')
+        if (!user || !isAdmin(user)) {
+            router.push('/') // Redirect non-admins to home
             return
         }
 

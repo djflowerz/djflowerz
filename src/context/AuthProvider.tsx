@@ -1,63 +1,40 @@
 'use client'
-import { createContext, useContext, useEffect, useState } from 'react'
-import { User, Session } from '@supabase/supabase-js'
-import { supabase } from '@/lib/supabaseClient'
+import { createContext, useContext } from 'react'
+import { UserProvider, useUser } from '@auth0/nextjs-auth0/client'
 import { useRouter } from 'next/navigation'
 
 type AuthContextType = {
-    user: User | null
-    session: Session | null
+    user: any | null
     isLoading: boolean
-    signOut: () => Promise<void>
+    signOut: () => void
 }
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
-    session: null,
     isLoading: true,
-    signOut: async () => { },
+    signOut: () => { },
 })
 
 export const useAuth = () => useContext(AuthContext)
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(null)
-    const [session, setSession] = useState<Session | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
+    return (
+        <UserProvider>
+            <AuthInternal>{children}</AuthInternal>
+        </UserProvider>
+    )
+}
+
+function AuthInternal({ children }: { children: React.ReactNode }) {
+    const { user, isLoading, error } = useUser()
     const router = useRouter()
 
-    useEffect(() => {
-        // Check active session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session)
-            setUser(session?.user ?? null)
-            setIsLoading(false)
-        })
-
-        // Listen for changes
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
-            setSession(session)
-            setUser(session?.user ?? null)
-            setIsLoading(false)
-            if (_event === 'SIGNED_OUT') {
-                setUser(null)
-                setSession(null)
-                router.refresh()
-            }
-        })
-
-        return () => subscription.unsubscribe()
-    }, [router])
-
-    const signOut = async () => {
-        await supabase.auth.signOut()
-        router.push('/login')
+    const signOut = () => {
+        window.location.href = '/api/auth/logout'
     }
 
     return (
-        <AuthContext.Provider value={{ user, session, isLoading, signOut }}>
+        <AuthContext.Provider value={{ user, isLoading, signOut }}>
             {children}
         </AuthContext.Provider>
     )

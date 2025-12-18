@@ -7,7 +7,7 @@ import { X, Trash2, ShoppingBag, Loader2, Smartphone, Tag } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 export default function CartDrawer() {
-    const { items, removeItem, total, isOpen, toggleCart, applyCoupon, removeCoupon, discount, couponCode } = useCart()
+    const { items, removeItem, total, isOpen, toggleCart, applyCoupon, removeCoupon, discount, shipping, couponCode } = useCart()
     const { user } = useAuth() // Get user
     const [phone, setPhone] = useState('')
     const [promoInput, setPromoInput] = useState('')
@@ -48,7 +48,7 @@ export default function CartDrawer() {
             if (count && count > 0) {
                 setPromoMessage({ type: 'error', text: 'Valid for first purchase only.' })
             } else {
-                applyCoupon(code, 20)
+                applyCoupon(code)
                 setPromoMessage({ type: 'success', text: '20% Discount Applied!' })
                 setPromoInput('')
             }
@@ -158,7 +158,7 @@ export default function CartDrawer() {
                                 {couponCode ? (
                                     <div className="flex justify-between items-center bg-green-500/10 p-3 rounded-lg border border-green-500/20">
                                         <span className="text-green-400 text-sm font-bold flex items-center gap-2">
-                                            <Tag size={16} /> Code applied: {couponCode} (-{discount}%)
+                                            <Tag size={16} /> Code applied: DJFLOWERZ (-20%)
                                         </span>
                                         <button onClick={removeCoupon} className="text-slate-400 hover:text-white"><X size={16} /></button>
                                     </div>
@@ -189,14 +189,25 @@ export default function CartDrawer() {
                                 )}
                             </div>
 
-                            <div className="flex justify-between items-center mb-6">
-                                <span className="text-slate-400">Total</span>
-                                <div className="text-right">
-                                    {discount > 0 && (
-                                        <span className="block text-sm text-slate-500 line-through">
-                                            KES {Math.round(total / (1 - discount / 100)).toLocaleString()}
-                                        </span>
-                                    )}
+                            <div className="space-y-2 mb-6 text-sm">
+                                <div className="flex justify-between text-slate-400">
+                                    <span>Subtotal</span>
+                                    <span>KES {(total - shipping + discount).toLocaleString()}</span>
+                                </div>
+                                {discount > 0 && (
+                                    <div className="flex justify-between text-green-400">
+                                        <span>Promo Discount (20%)</span>
+                                        <span>- KES {discount.toLocaleString()}</span>
+                                    </div>
+                                )}
+                                {shipping > 0 && (
+                                    <div className="flex justify-between text-slate-400">
+                                        <span>Shipping (Equipment)</span>
+                                        <span>KES {shipping.toLocaleString()}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between items-center pt-2 border-t border-white/5">
+                                    <span className="text-white font-bold">Total</span>
                                     <span className="text-2xl font-bold text-white">KES {total.toLocaleString()}</span>
                                 </div>
                             </div>

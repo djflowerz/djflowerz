@@ -126,6 +126,61 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ADVERTISEMENT SECTION */}
+      <section className="container mx-auto px-4 md:px-8">
+        <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden group">
+          <img
+            src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80"
+            alt="Ad Banner"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 to-transparent flex items-center p-8 md:p-12">
+            <div className="max-w-md space-y-4">
+              <span className="text-rose-500 font-bold tracking-widest text-xs uppercase">Limited Offer</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">Use Code <span className="text-rose-500 underline decoration-2 underline-offset-4">DJFLOWERZ</span> for 20% OFF Your First Gear Purchase</h2>
+              <Link href="/store" className="inline-flex items-center gap-2 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-full font-bold transition-all shadow-lg shadow-rose-600/20 active:scale-95">
+                Shop Equipment <ArrowRight size={18} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PRODUCT SHOWCASE */}
+      <section className="container mx-auto px-4 md:px-8 space-y-12">
+        <div className="text-center">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Elite Gear Showcase</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">Discover professional-grade tools used by DJ Flowerz to create world-class performances.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <ProductCard
+            name="Pro DJ Controller"
+            price="120,000"
+            img="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80"
+            category="Hardware"
+          />
+          <ProductCard
+            name="Studio Headphones"
+            price="35,000"
+            img="https://images.unsplash.com/photo-1546435770-a3e426ff472b?auto=format&fit=crop&q=80"
+            category="Accessories"
+          />
+          <ProductCard
+            name="Exclusive Drum Kit"
+            price="5,000"
+            img="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80"
+            category="Software"
+          />
+          <ProductCard
+            name="DJ Flowerz Cap"
+            price="2,500"
+            img="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80"
+            category="Merch"
+          />
+        </div>
+      </section>
+
       {/* LATEST DROPS */}
       <LatestDropsSection />
     </div>
@@ -220,6 +275,27 @@ function FeatureCard({ icon, title, description, link, linkText }: any) {
       <Link href={link} className="text-white font-bold hover:text-rose-500 flex items-center gap-2 text-sm uppercase tracking-wide">
         {linkText} <ArrowRight size={16} />
       </Link>
+    </div>
+  )
+}
+function ProductCard({ name, price, img, category }: any) {
+  return (
+    <div className="bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden group hover:border-rose-500/30 transition-all">
+      <div className="aspect-square overflow-hidden relative">
+        <img src={img} alt={name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+        <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md text-[10px] font-bold text-white uppercase tracking-wider border border-white/10">
+          {category}
+        </div>
+      </div>
+      <div className="p-5 space-y-3">
+        <h3 className="font-bold text-white group-hover:text-rose-500 transition-colors">{name}</h3>
+        <div className="flex items-center justify-between">
+          <span className="text-slate-400 font-bold text-sm">KES {price}</span>
+          <Link href="/store" className="text-rose-500 p-2 hover:bg-rose-500/10 rounded-full transition-colors">
+            <ShoppingBag size={18} />
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

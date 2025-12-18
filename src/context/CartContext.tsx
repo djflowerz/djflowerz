@@ -18,8 +18,10 @@ type CartContextType = {
     isOpen: boolean
     toggleCart: () => void
     discount: number
+    shipping: number
+    shippingMethod: string | null
     couponCode: string | null
-    applyCoupon: (code: string, discountPercent: number) => void
+    applyCoupon: (code: string) => boolean
     removeCoupon: () => void
 }
 
@@ -31,8 +33,10 @@ const CartContext = createContext<CartContextType>({
     isOpen: false,
     toggleCart: () => { },
     discount: 0,
+    shipping: 0,
+    shippingMethod: null,
     couponCode: null,
-    applyCoupon: () => { },
+    applyCoupon: () => false,
     removeCoupon: () => { }
 })
 
@@ -44,19 +48,30 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     const [total, setTotal] = useState(0)
     const [discount, setDiscount] = useState(0)
     const [couponCode, setCouponCode] = useState<string | null>(null)
+    const [shipping, setShipping] = useState(0)
+    const [shippingMethod, setShippingMethod] = useState<string | null>(null)
 
     useEffect(() => {
-        // Calculate total
+        // Calculate subtotal
         const subtotal = items.reduce((acc, item) => acc + item.price, 0)
 
-        let finalTotal = subtotal
-        if (discount > 0) {
-            const discountAmount = (subtotal * discount) / 100
-            finalTotal = subtotal - discountAmount
+        // Calculate discount
+        let discountAmount = 0
+        if (couponCode === 'DJFLOWERZ' && items.length > 0) {
+            discountAmount = subtotal * 0.20 // 20% discount
         }
 
-        setTotal(finalTotal)
-    }, [items, discount])
+        // Calculate shipping
+        let shippingFee = 0
+        const hasEquipment = items.some(item => item.product_type === 'equipment')
+        if (hasEquipment) {
+            shippingFee = 1500 // Flat equipment shipping fee (adjustable)
+        }
+
+        setDiscount(discountAmount)
+        setShipping(shippingFee)
+        setTotal(subtotal - discountAmount + shippingFee)
+    }, [items, couponCode])
 
     const addItem = (item: CartItem) => {
         setItems([...items, item])
@@ -67,9 +82,12 @@ export default function CartProvider({ children }: { children: React.ReactNode }
         setItems(items.filter(item => item.id !== id))
     }
 
-    const applyCoupon = (code: string, discountPercent: number) => {
-        setCouponCode(code)
-        setDiscount(discountPercent)
+    const applyCoupon = (code: string) => {
+        if (code.toUpperCase() === 'DJFLOWERZ') {
+            setCouponCode('DJFLOWERZ')
+            return true
+        }
+        return false
     }
 
     const removeCoupon = () => {
@@ -82,7 +100,7 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     return (
         <CartContext.Provider value={{
             items, addItem, removeItem, total, isOpen, toggleCart,
-            discount, couponCode, applyCoupon, removeCoupon
+            discount, shipping, shippingMethod, couponCode, applyCoupon, removeCoupon
         }}>
             {children}
         </CartContext.Provider>

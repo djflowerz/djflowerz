@@ -81,8 +81,10 @@ export default function MusicPoolPage() {
                 setSelectedGenre(genre)
             }
         } else {
-            // Trigger Subscription Modal
+            // Trigger Subscription Modal and scroll to plans if needed
             openModal()
+            const plansSection = document.getElementById('plans-section')
+            if (plansSection) plansSection.scrollIntoView({ behavior: 'smooth' })
         }
     }
 
@@ -155,7 +157,7 @@ export default function MusicPoolPage() {
 
                     {/* Show Pricing Plans below if not subscribed */}
                     {!isSubscribed && (
-                        <div className="mt-20 border-t border-white/5 pt-16">
+                        <div id="plans-section" className="mt-20 border-t border-white/5 pt-16">
                             <h2 className="text-3xl font-bold text-white text-center mb-10">Choose Your Plan</h2>
                             <p className="text-center text-slate-400 mb-8 max-w-2xl mx-auto text-sm">
                                 Start downloading instantly. Pay via M-Pesa or Global Transfer (WorldRemit, Remitly, Wise, MTN) to +254 7XX XXX XXX.
@@ -216,7 +218,7 @@ export default function MusicPoolPage() {
 }
 
 function MusicPoolGrid({ genreId }: { genreId: string }) {
-    const { session } = useAuth()
+    const { session, user } = useAuth()
     const [mixes, setMixes] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -252,15 +254,15 @@ function MusicPoolGrid({ genreId }: { genreId: string }) {
     }
 
     const handleDownload = async (mixId: string, title: string) => {
-        if (!session) {
-            window.location.href = '/login?redirect=/music-pool'
+        if (!session && !user) {
+            window.location.href = '/api/auth/login?returnTo=/music-pool' // Point to Auth0 login
             return
         }
 
         try {
             const res = await fetch(`/api/download?fileId=${mixId}&type=mix`, {
                 headers: {
-                    Authorization: `Bearer ${session.access_token}`
+                    Authorization: `Bearer ${session?.access_token}`
                 }
             })
             const data = await res.json()
