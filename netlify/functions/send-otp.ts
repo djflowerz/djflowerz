@@ -5,25 +5,31 @@ import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
 // Parse Supabase credentials from environment
+// Prioritize individual env vars to avoid JSON parse errors
 function getSupabaseCredentials() {
-    // Try SUPABASE_CREDENTIALS first (JSON format)
+    // First try individual env vars (most reliable)
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (url && serviceKey) {
+        return { url, serviceKey };
+    }
+
+    // Fall back to SUPABASE_CREDENTIALS JSON format
     const credsVar = process.env.SUPABASE_CREDENTIALS;
     if (credsVar) {
         try {
             const creds = JSON.parse(credsVar);
             return {
-                url: creds.url || creds.supabaseUrl,
-                serviceKey: creds.serviceRoleKey || creds.service_role_key || process.env.SUPABASE_SERVICE_ROLE_KEY
+                url: creds.url || creds.supabaseUrl || url,
+                serviceKey: creds.serviceRoleKey || creds.service_role_key || serviceKey
             };
         } catch (e) {
-            console.error('Error parsing SUPABASE_CREDENTIALS:', e);
+            console.warn('SUPABASE_CREDENTIALS JSON malformed, using individual env vars');
         }
     }
-    // Fall back to individual env vars
-    return {
-        url: process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL,
-        serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY
-    };
+
+    return { url, serviceKey };
 }
 
 const { url: supabaseUrl, serviceKey: supabaseServiceKey } = getSupabaseCredentials();
