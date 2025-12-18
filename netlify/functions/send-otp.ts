@@ -58,9 +58,10 @@ export const handler: Handler = async (event: HandlerEvent) => {
             console.error('Error storing OTP:', upsertError);
             throw new Error('Failed to store verification code');
         }
-
-        // Clean up expired OTPs
-        await supabase.rpc('cleanup_expired_otps').catch(() => { });
+        // Clean up expired OTPs (fire and forget)
+        try {
+            await supabase.rpc('cleanup_expired_otps');
+        } catch { /* ignore cleanup errors */ }
 
         // Configure email transporter
         const transporter = nodemailer.createTransport({
