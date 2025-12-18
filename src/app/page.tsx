@@ -64,8 +64,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FEATURES GRID */}
+      {/* FEATURES GRID (MUSIC POOL) */}
       <section className="container mx-auto px-4 md:px-8">
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">Join The Movement</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard
             icon={<Music size={40} className="text-rose-500" />}
@@ -90,6 +91,44 @@ export default function Home() {
           />
         </div>
       </section>
+
+      {/* PRODUCT SHOWCASE */}
+      <section className="container mx-auto px-4 md:px-8 space-y-12">
+        <div className="text-center">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Elite Gear & Merchandise</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">Discover professional-grade tools used by DJ Flowerz to create world-class performances.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <ProductCard
+            name="Pro DJ Controller"
+            price="120,000"
+            img="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80"
+            category="Hardware"
+          />
+          <ProductCard
+            name="Studio Headphones"
+            price="35,000"
+            img="https://images.unsplash.com/photo-1546435770-a3e426ff472b?auto=format&fit=crop&q=80"
+            category="Accessories"
+          />
+          <ProductCard
+            name="Exclusive Drum Kit"
+            price="5,000"
+            img="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80"
+            category="Software"
+          />
+          <ProductCard
+            name="DJ Flowerz Cap"
+            price="2,500"
+            img="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80"
+            category="Merch"
+          />
+        </div>
+      </section>
+
+      {/* LATEST DROPS */}
+      <LatestDropsSection />
 
       {/* YOUTUBE CHANNEL PROMOTION */}
       <section className="container mx-auto px-4 md:px-8">
@@ -145,44 +184,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* PRODUCT SHOWCASE */}
-      <section className="container mx-auto px-4 md:px-8 space-y-12">
-        <div className="text-center">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Elite Gear Showcase</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">Discover professional-grade tools used by DJ Flowerz to create world-class performances.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <ProductCard
-            name="Pro DJ Controller"
-            price="120,000"
-            img="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80"
-            category="Hardware"
-          />
-          <ProductCard
-            name="Studio Headphones"
-            price="35,000"
-            img="https://images.unsplash.com/photo-1546435770-a3e426ff472b?auto=format&fit=crop&q=80"
-            category="Accessories"
-          />
-          <ProductCard
-            name="Exclusive Drum Kit"
-            price="5,000"
-            img="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80"
-            category="Software"
-          />
-          <ProductCard
-            name="DJ Flowerz Cap"
-            price="2,500"
-            img="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80"
-            category="Merch"
-          />
-        </div>
-      </section>
-
-      {/* LATEST DROPS */}
-      <LatestDropsSection />
     </div>
   );
 }

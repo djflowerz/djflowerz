@@ -56,13 +56,13 @@ export default function BookingsPage() {
                             </div>
                         </a>
 
-                        <a href="tel:+254700000000" className="flex items-center gap-4 text-slate-300 hover:text-white group">
+                        <a href="https://wa.me/254789783258" className="flex items-center gap-4 text-slate-300 hover:text-white group">
                             <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center group-hover:bg-green-600 transition-colors">
                                 <Smartphone size={24} />
                             </div>
                             <div>
                                 <h3 className="font-bold text-white">Call / WhatsApp</h3>
-                                <p className="text-sm">+254 7XX XXX XXX</p>
+                                <p className="text-sm">+254 789 783 258</p>
                             </div>
                         </a>
                     </div>

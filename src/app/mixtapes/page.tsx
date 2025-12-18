@@ -107,8 +107,12 @@ export default function MixtapesPage() {
                     {genres.map(g => (
                         <button
                             key={g.id}
-                            onClick={() => fetchMixes(g.name)}
-                            className={`px-4 py-2 rounded-full border border-white/10 whitespace-nowrap transition-colors ${selectedGenre === g.name ? 'bg-rose-600 text-white border-rose-600' : 'bg-transparent text-slate-400 hover:text-white'}`}
+                            onClick={() => {
+                                // Redirect to Telegram with hashtag search
+                                const telegramUrl = `https://t.me/djflowerzpool?q=%23${g.name.replace(/\s+/g, '')}`;  // Assumes channel username 'djflowerzpool'
+                                window.open(telegramUrl, '_blank');
+                            }}
+                            className={`px-4 py-2 rounded-full border border-white/10 whitespace-nowrap transition-colors bg-transparent text-slate-400 hover:text-white hover:border-rose-500`}
                         >
                             {g.name}
                         </button>

@@ -30,7 +30,7 @@ export default function Navbar() {
         if (e.key === 'Enter') {
             const query = e.currentTarget.value;
             if (query.trim()) {
-                router.push(`/store?search=${encodeURIComponent(query)}`);
+                router.push(`/search?q=${encodeURIComponent(query)}`);
             }
         }
     };
@@ -89,9 +89,12 @@ export default function Navbar() {
                         <button className="p-2 text-slate-400 hover:text-white transition-colors">
                             <ShoppingBag size={20} />
                         </button>
-                        <a href="/api/auth/login" className="px-5 py-2 text-sm font-bold text-white bg-rose-600 rounded-full hover:bg-rose-700 transition-transform active:scale-95 shadow-lg shadow-rose-600/20">
+                        <Link href="/dashboard" className="p-2 text-slate-400 hover:text-white transition-colors">
+                            <User size={20} />
+                        </Link>
+                        <Link href="/signup" className="px-5 py-2 text-sm font-bold text-white bg-rose-600 rounded-full hover:bg-rose-700 transition-transform active:scale-95 shadow-lg shadow-rose-600/20">
                             Join Pool
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Mobile Toggle */}
@@ -119,9 +122,9 @@ export default function Navbar() {
                         >
                             Tip DJ Jar ❤️
                         </button>
-                        <a href="/api/auth/login" onClick={() => setIsOpen(false)} className="mt-4 w-full py-3 text-center font-bold text-white bg-rose-600 rounded-lg">
+                        <Link href="/signup" onClick={() => setIsOpen(false)} className="mt-4 w-full py-3 text-center font-bold text-white bg-rose-600 rounded-lg">
                             Login / Join
-                        </a>
+                        </Link>
                     </div>
                 )}
             </nav>

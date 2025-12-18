@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getMpesaCredentials } from '@/lib/env';
 
+import { supabase } from '@/lib/supabaseClient';
+
 export async function POST(req: Request) {
     try {
         const { phone, amount } = await req.json();
@@ -64,6 +66,22 @@ export async function POST(req: Request) {
         const stkData = await stkRes.json();
 
         if (stkData.ResponseCode === '0') {
+            // Save pending transaction to DB so callback can update it
+            const { error: dbError } = await supabase
+                .from('payments')
+                .insert({
+                    checkout_request_id: stkData.CheckoutRequestID,
+                    merchant_request_id: stkData.MerchantRequestID,
+                    phone_number: formattedPhone,
+                    amount: Math.ceil(amount),
+                    status: 'pending'
+                });
+
+            if (dbError) {
+                console.error('Failed to save payment record:', dbError);
+                // We don't block the UI but backend logging is crucial
+            }
+
             return NextResponse.json({
                 status: 'pending',
                 message: 'STK Push sent',

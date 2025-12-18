@@ -83,18 +83,55 @@ export default function CartDrawer() {
             const data = await res.json()
 
             if (res.ok) {
-                setStatus('success')
-                setMessage('STK Push sent! Check your phone.')
+                setStatus('pending')
+                setMessage('STK Push sent! Enter PIN on your phone...')
+                pollPaymentStatus(data.CheckoutRequestID)
             } else {
                 setStatus('error')
                 setMessage(data.error || 'Payment failed')
+                setLoading(false)
             }
         } catch (error) {
             setStatus('error')
             setMessage('Something went wrong')
-        } finally {
             setLoading(false)
         }
+    }
+
+    const pollPaymentStatus = async (checkoutRequestId: string) => {
+        const pollInterval = setInterval(async () => {
+            try {
+                const res = await fetch(`/api/mpesa/check-status?orderId=${checkoutRequestId}`)
+                const data = await res.json()
+
+                if (data.status === 'completed') {
+                    clearInterval(pollInterval)
+                    setStatus('success')
+                    setMessage('Payment Successful! Order Confirmed.')
+                    setLoading(false)
+                    // Optional: Clear cart here or redirect
+                    // setTimeout(() => { items.forEach(i => removeItem(i.id)); toggleCart(); }, 2000)
+                } else if (data.status === 'failed') {
+                    clearInterval(pollInterval)
+                    setStatus('error')
+                    setMessage('Payment Failed or Cancelled.')
+                    setLoading(false)
+                }
+            } catch (e) {
+                // Ignore transient errors
+            }
+        }, 3000) // Check every 3 seconds
+
+        // Stop polling after 2 minutes
+        setTimeout(() => {
+            clearInterval(pollInterval)
+            if (status !== 'success') {
+                setLoading(false)
+                if (status === 'pending') {
+                    setMessage('Payment verification timed out. Only triggered if completion not detected.')
+                }
+            }
+        }, 120000)
     }
 
     return (

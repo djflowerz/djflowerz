@@ -9,6 +9,7 @@ export default function SignupPage() {
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [referralCode, setReferralCode] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -19,6 +20,12 @@ export default function SignupPage() {
         setLoading(true)
         setError(null)
 
+        if (password !== confirmPassword) {
+            setError("Passwords do not match")
+            setLoading(false)
+            return
+        }
+
         try {
             const { error } = await supabase.auth.signUp({
                 email,
@@ -27,6 +34,7 @@ export default function SignupPage() {
                     data: {
                         full_name: fullName,
                         referral_code: referralCode ? referralCode.toUpperCase() : null,
+                        my_referral_code: 'REF-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
                     },
                 },
             })
@@ -92,6 +100,19 @@ export default function SignupPage() {
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-rose-500 transition-colors"
                             placeholder="Min. 6 characters"
+                            minLength={6}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">Confirm Password</label>
+                        <input
+                            type="password"
+                            required
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-rose-500 transition-colors"
+                            placeholder="Repeat password"
                             minLength={6}
                         />
                     </div>
